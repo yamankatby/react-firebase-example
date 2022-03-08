@@ -1,25 +1,18 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import { signIn } from "./config/firebase";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+  useEffect(() => {
+    signIn("joe@mail.com", "1234567")
+      .then(() => {
+        console.log("Done");
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, []);
+
+  return <h1>Hi, App!</h1>;
+};
 
 export default App;
