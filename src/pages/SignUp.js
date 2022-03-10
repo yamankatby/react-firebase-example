@@ -9,8 +9,27 @@ import {
   Typography,
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import { useSelector, useDispatch } from "react-redux";
+import { changeName, changeEmail, changePassword } from "../redux/authSlice";
 
 export default function SignUp() {
+  const name = useSelector((state) => state.auth.name);
+  const email = useSelector((state) => state.auth.email);
+  const password = useSelector((state) => state.auth.password);
+
+  const dispatch = useDispatch();
+
+  const handleNameChange = (e) => {
+    dispatch(changeName(e.currentTarget.value));
+  };
+
+  const handleEmailChange = (e) => {
+    dispatch(changeEmail(e.currentTarget.value));
+  };
+
+  const handlePasswordChange = (e) => {
+    dispatch(changePassword(e.currentTarget.value));
+  };
   return (
     <>
       <CssBaseline />
@@ -30,6 +49,8 @@ export default function SignUp() {
             required
             autoComplete="name"
             autoFocus
+            value={name}
+            onChange={handleNameChange}
           />
           <TextField
             fullWidth
@@ -37,6 +58,8 @@ export default function SignUp() {
             label="Email Address"
             required
             autoComplete="email"
+            value={email}
+            onChange={handleEmailChange}
           />
           <TextField
             fullWidth
@@ -44,6 +67,8 @@ export default function SignUp() {
             label="Password"
             required
             type="password"
+            value={password}
+            onChange={handlePasswordChange}
           />
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
             Sign up
