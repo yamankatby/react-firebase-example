@@ -10,12 +10,20 @@ import {
 } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { useSelector, useDispatch } from "react-redux";
-import { changeName, changeEmail, changePassword } from "../redux/authSlice";
+import {
+  changeName,
+  changeEmail,
+  changePassword,
+  register,
+} from "../redux/authSlice";
 
 export default function SignUp() {
   const name = useSelector((state) => state.auth.name);
   const email = useSelector((state) => state.auth.email);
   const password = useSelector((state) => state.auth.password);
+
+  const isLoading = useSelector((state) => state.auth.isLoading);
+  const error = useSelector((state) => state.auth.error);
 
   const dispatch = useDispatch();
 
@@ -30,18 +38,29 @@ export default function SignUp() {
   const handlePasswordChange = (e) => {
     dispatch(changePassword(e.currentTarget.value));
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    dispatch(register({ name, email, password }));
+  };
+
   return (
     <>
       <CssBaseline />
 
       <Container maxWidth="xs">
-        <Box component="form" sx={{ mt: 4 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
           <Avatar sx={{ mx: "auto", bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography variant="h5" sx={{ textAlign: "center" }}>
             Sign up
           </Typography>
+          {error && (
+            <Typography sx={{ textAlign: "center", color: "error.main" }}>
+              {error}
+            </Typography>
+          )}
           <TextField
             fullWidth
             margin="normal"
@@ -70,8 +89,14 @@ export default function SignUp() {
             value={password}
             onChange={handlePasswordChange}
           />
-          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
-            Sign up
+          <Button
+            type="submit"
+            variant="contained"
+            disabled={isLoading}
+            fullWidth
+            sx={{ mt: 2 }}
+          >
+            {isLoading ? "Loadding..." : "Sign up"}
           </Button>
 
           <Box
