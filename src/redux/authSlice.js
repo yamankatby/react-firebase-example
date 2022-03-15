@@ -4,6 +4,7 @@ import {
   updateCurrentUser,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
@@ -33,6 +34,17 @@ export const logIn = createAsyncThunk(
   async ({ email, password }, { rejectWithValue }) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+    } catch (e) {
+      return rejectWithValue(e.code);
+    }
+  }
+);
+
+export const forgotPassword = createAsyncThunk(
+  "auth/forgotPassword",
+  async (email, { rejectWithValue }) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
     } catch (e) {
       return rejectWithValue(e.code);
     }
@@ -78,6 +90,16 @@ const authSlice = createSlice({
       .addCase(logIn.rejected, (state, action) => {
         state.error = action.payload;
         state.isLoading = false;
+      })
+      .addCase(forgotPassword.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(forgotPassword.fulfilled, (state) => {
+        state.isLoading = false;
+      })
+      .addCase(forgotPassword.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = action.payload;
       });
   },
 });
