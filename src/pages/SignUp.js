@@ -1,18 +1,9 @@
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { Link as RouterLink } from "react-router-dom";
 import {
-  TextField,
-  CssBaseline,
-  Button,
-  Box,
-  Container,
-  Link,
-  Avatar,
-  Typography,
-} from "@mui/material";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  changeName,
   changeEmail,
+  changeName,
   changePassword,
   register,
 } from "../redux/authSlice";
@@ -23,7 +14,6 @@ export default function SignUp() {
   const password = useSelector((state) => state.auth.password);
 
   const isLoading = useSelector((state) => state.auth.isLoading);
-  const error = useSelector((state) => state.auth.error);
 
   const dispatch = useDispatch();
 
@@ -45,72 +35,61 @@ export default function SignUp() {
   };
 
   return (
-    <>
-      <CssBaseline />
+    <form onSubmit={handleSubmit}>
+      <Typography variant="h5" sx={{ textAlign: "center" }}>
+        Sign up
+      </Typography>
 
-      <Container maxWidth="xs">
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
-          <Avatar sx={{ mx: "auto", bgcolor: "secondary.main" }}>
-            <LockOutlinedIcon />
-          </Avatar>
-          <Typography variant="h5" sx={{ textAlign: "center" }}>
-            Sign up
-          </Typography>
-          {error && (
-            <Typography sx={{ textAlign: "center", color: "error.main" }}>
-              {error}
-            </Typography>
-          )}
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Full Name"
-            required
-            autoComplete="name"
-            autoFocus
-            value={name}
-            onChange={handleNameChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Email Address"
-            required
-            autoComplete="email"
-            value={email}
-            onChange={handleEmailChange}
-          />
-          <TextField
-            fullWidth
-            margin="normal"
-            label="Password"
-            required
-            type="password"
-            value={password}
-            onChange={handlePasswordChange}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isLoading}
-            fullWidth
-            sx={{ mt: 2 }}
-          >
-            {isLoading ? "Loadding..." : "Sign up"}
-          </Button>
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Full Name"
+        required
+        autoComplete="name"
+        autoFocus
+        value={name}
+        onChange={handleNameChange}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Email Address"
+        required
+        autoComplete="email"
+        value={email}
+        onChange={handleEmailChange}
+      />
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Password"
+        required
+        type="password"
+        value={password}
+        onChange={handlePasswordChange}
+      />
+      <Button
+        type="submit"
+        variant="contained"
+        disabled={isLoading}
+        fullWidth
+        sx={{ mt: 2 }}
+      >
+        {isLoading ? "Loadding..." : "Sign up"}
+      </Button>
 
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              mt: 4,
-            }}
-          >
-            <Link>Already have an account? Sign in</Link>
-          </Box>
-        </Box>
-      </Container>
-    </>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          mt: 4,
+        }}
+      >
+        <Link component={RouterLink} to="../sign-in">
+          Already have an account? Sign in
+        </Link>
+      </Box>
+    </form>
   );
 }
