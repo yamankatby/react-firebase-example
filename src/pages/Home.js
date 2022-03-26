@@ -1,17 +1,33 @@
-import { useDispatch } from "react-redux";
-import { logOut } from "../redux/authSlice";
+import {
+  useProductsLister,
+  deleteProduct,
+  addProduct,
+} from "../config/firebase";
 
 export default function Home() {
-  const dispatch = useDispatch();
-
-  const handleLogOut = () => {
-    dispatch(logOut());
-  };
+  const products = useProductsLister();
 
   return (
     <div>
-      <h1>Home</h1>
-      <button onClick={handleLogOut}>Sign Out</button>
+      <button
+        onClick={() => {
+          addProduct();
+        }}
+      >
+        +
+      </button>
+      {products.map((product) => (
+        <div>
+          <h2>{product.name}</h2>
+          <button
+            onClick={() => {
+              deleteProduct(product.id);
+            }}
+          >
+            delete
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
