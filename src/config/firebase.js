@@ -10,6 +10,8 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setProducts } from "../redux/productsSlice";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAIwPj3b5JD9E5rXOWV5DbhS-48pxRWnzA",
@@ -26,35 +28,18 @@ getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 
-const productsRef = collection(db, "products");
+export const productsRef = collection(db, "products");
 
-export const useProductsLister = () => {
-  const [products, setProducts] = useState([]);
-
+export const useProductsListener = () => {
+  const dispatch = useDispatch();
   useEffect(() => {
     return onSnapshot(productsRef, (snapshot) => {
       const docs = snapshot.docs.map((doc) => {
         const data = doc.data();
         return { id: doc.id, ...data, createdAt: data.createdAt?.toDate() };
       });
-      setProducts(docs);
+
+      dispatch(setProducts(docs));
     });
-  }, []);
-
-  return products;
-};
-
-export const deleteProduct = (id) => {
-  deleteDoc(doc(db, "products", id));
-};
-
-export const addProduct = () => {
-  const uid = auth.currentUser?.uid;
-  if (!uid) return;
-  addDoc(productsRef, {
-    name: "iPhone",
-    description: "Lorem ipsum",
-    price: 2002,
-    uid,
-  });
+  }, [dispatch]);
 };
